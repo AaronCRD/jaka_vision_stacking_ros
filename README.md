@@ -15,6 +15,27 @@
 * **视觉与坐标转换**：基于 OpenCV 提取 HSV 色块，实现像素坐标系到世界坐标系的精确转换，可直接输出供学术论文使用的高质量视觉呈现画面。
 * **高频运动学吸附方法**：摒弃易崩溃的物理碰撞模拟，采用 **125Hz** 高频 ROS 定时器同步模型状态，实现平滑、无延迟的“虚拟吸盘”抓取。
 * **稳定堆叠物理调优**：针对 Gazebo 物理引擎调优极高摩擦系数（$\mu_1, \mu_2 = 100$）与接触防抖参数，彻底解决多层仿真堆叠滑落难题。
+* 
+## 📂 核心代码结构解析
+本项目遵循标准 ROS 功能包结构，模块化设计方便开发者进行二次开发。目录与核心文件功能说明如下：
+```text
+jaka_vision_pick/
+├── CMakeLists.txt              # ROS 编译配置文件
+├── package.xml                 # 功能包依赖声明文件
+├── demo.gif                    # 演示动图
+├── launch/                     # ROS 启动文件目录
+│   ├── vision_pick.launch       # 模式一：启动单目标抓取仿真环境 (包含机械臂、相机与单个红色物块)
+│   └── multi_vision_pick.launch # 模式二：启动多目标堆叠仿真环境 (包含机械臂与相机，物块等待脚本动态生成)
+├── scripts/                    # Python 核心逻辑代码
+│   ├── vision_detector.py       # [模式一] 视觉节点：OpenCV 识别红色物块并发布世界坐标
+│   ├── control_node.py          # [模式一] 控制节点：MoveIt 运动规划与单物块虚拟吸附抓取逻辑
+│   ├── spawn_objects.py         # [模式二] 环境节点：调用 Gazebo 服务，动态生成带有高摩擦力物理属性的三色物块
+│   ├── multi_vision.py          # [模式二] 视觉节点：并行识别红/绿/蓝多目标，发布至独立的坐标话题
+│   └── multi_control.py         # [模式二] 控制节点：125Hz 高频运动学吸附，多目标精确高度累加与自动堆叠控制
+└── urdf/                       # 机器人与环境模型文件
+    ├── camera_and_box.xacro     # 顶置相机的 URDF 描述文件 (包含质量惯性、空间位姿与 gazebo_ros_camera 插件)
+    └── target_block.urdf        # 模式一中红色目标物块的独立物理模型定义
+```
 
 ## 🛠️ 依赖环境与前置准备
 1. Ubuntu 20.04 + ROS Noetic (或 Ubuntu 18.04 + ROS Melodic)
