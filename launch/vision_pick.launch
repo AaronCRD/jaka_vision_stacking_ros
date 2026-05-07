@@ -1,0 +1,11 @@
+<launch>
+  <include file="$(find jaka_minicobo_moveit_config)/launch/demo_gazebo.launch" />
+
+  <param name="env_description" command="$(find xacro)/xacro '$(find jaka_vision_pick)/urdf/camera_and_box.xacro'" />
+  <node name="spawn_env" pkg="gazebo_ros" type="spawn_model" args="-urdf -param env_description -model environment" respawn="false" output="screen" />
+
+  <param name="block_description" textfile="$(find jaka_vision_pick)/urdf/target_block.urdf" />
+  <node name="spawn_box" pkg="gazebo_ros" type="spawn_model" 
+        args="-urdf -param block_description -model target_block -x 0.3 -y 0.1 -z 0.025" 
+        respawn="false" output="screen" />
+</launch>

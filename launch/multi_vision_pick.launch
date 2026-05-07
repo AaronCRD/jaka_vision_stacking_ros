@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find jaka_minicobo_moveit_config)/launch/demo_gazebo.launch" />
+
+  <param name="env_description" command="$(find xacro)/xacro '$(find jaka_vision_pick)/urdf/camera_and_box.xacro'" />
+  <node name="spawn_env" pkg="gazebo_ros" type="spawn_model" args="-urdf -param env_description -model environment" respawn="false" output="screen" />
+</launch>
