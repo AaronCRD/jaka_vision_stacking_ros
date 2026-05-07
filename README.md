@@ -30,7 +30,7 @@
 cd ~/jaka_robot_v2.2/src
 
 # 2. 克隆本仓库 (克隆时直接命名为 jaka_vision_pick 解决命名冲突)
-git clone [https://github.com/AaronCRD/jaka_vision_stacking_ros.git](https://github.com/AaronCRD/jaka_vision_stacking_ros.git) jaka_vision_pick
+git clone https://github.com/AaronCRD/jaka_vision_stacking_ros.git jaka_vision_pick
 
 # 3. 赋予所有 Python 脚本可执行权限
 chmod +x jaka_vision_pick/scripts/*.py
@@ -41,53 +41,61 @@ catkin_make
 
 # 5. 刷新环境变量
 source devel/setup.bash
+```
 
-🎮 详细操作步骤
-模式一：基础单目标抓取 (Single Pick & Place)
+## 🎮 详细操作步骤
 
+### 模式一：基础单目标抓取 (Single Pick & Place)
 此模式将生成一个固定的红色物块，机械臂视觉锁定后将其移动到左侧放置点。
-请依次打开 3 个独立终端，并在每个终端中优先执行 source ~/jaka_robot_v2.2/devel/setup.bash：
-```bash
-#终端 1：启动仿真世界
+请依次打开 **3 个独立终端**，并在每个终端中优先执行 `source ~/jaka_robot_v2.2/devel/setup.bash`：
 
+**终端 1：启动仿真世界**
+```bash
 roslaunch jaka_vision_pick vision_pick.launch
-#预期：Gazebo 和 RViz 启动，桌面中心出现红色物块。若 Gazebo 处于暂停状态，请点击左下角播放按钮。
+```
+> **预期**：Gazebo 和 RViz 启动，桌面中心出现红色物块。若 Gazebo 处于暂停状态，请点击左下角播放按钮。
 
-#终端 2：启动视觉识别
-
-rosrun jaka_vision_pick vision_detector.py
-#预期：弹出 OpenCV 画面窗口，红块中心出现绿色定位点。
-
-#终端 3：执行运动控制
-
-rosrun jaka_vision_pick control_node.py
-#预期：机械臂自动规划路径，完成抓取与放置动作。
-
-
-模式二：多目标进阶堆叠 (Multi-Stacking)
-此模式将动态投放三种不同颜色和形状的物体，机械臂将依次识别、抓取并搭建成塔。
-请依次打开 4 个独立终端，并在每个终端中优先执行 source ~/jaka_robot_v2.2/devel/setup.bash：
+**终端 2：启动视觉识别**
 ```bash
-#终端 1：启动空白仿真世界与顶置相机
+rosrun jaka_vision_pick vision_detector.py
+```
+> **预期**：弹出 OpenCV 画面窗口，红块中心出现绿色定位点。
 
+**终端 3：执行运动控制**
+```bash
+rosrun jaka_vision_pick control_node.py
+```
+> **预期**：机械臂自动规划路径，完成抓取与放置动作。
+
+---
+
+### 模式二：多目标进阶堆叠 (Multi-Stacking)
+此模式将动态投放三种不同颜色和形状的物体，机械臂将依次识别、抓取并搭建成塔。
+请依次打开 **4 个独立终端**，并在每个终端中优先执行 `source ~/jaka_robot_v2.2/devel/setup.bash`：
+
+**终端 1：启动空白仿真世界与顶置相机**
+```bash
 roslaunch jaka_vision_pick multi_vision_pick.launch
-#预期：加载机械臂与半空中的蓝色顶置相机。
+```
+> **预期**：加载机械臂与半空中的蓝色顶置相机。
 
-#终端 2：动态投放物块
-
+**终端 2：动态投放物块**
+```bash
 rosrun jaka_vision_pick spawn_objects.py
-#预期：Gazebo 桌面瞬间掉落红色方块、绿色圆柱和蓝色方块。
+```
+> **预期**：Gazebo 桌面瞬间掉落红色方块、绿色圆柱和蓝色方块。
 
-#终端 3：启动多目标视觉追踪
-
+**终端 3：启动多目标视觉追踪**
+```bash
 rosrun jaka_vision_pick multi_vision.py
-#预期：弹出视觉窗口，三个物块分别被框选并打上对应名称标签。
+```
+> **预期**：弹出视觉窗口，三个物块分别被框选并打上对应名称标签。
 
-#终端 4：执行 125Hz 高频堆叠控制
-
+**终端 4：执行 125Hz 高频堆叠控制**
+```bash
 rosrun jaka_vision_pick multi_control.py
-#预期：机械臂按红->绿->蓝的顺序，精准完成物理堆叠。
+```
+> **预期**：机械臂按红->绿->蓝的顺序，精准完成物理堆叠。
 
-📝 License
+## 📝 License
 This project is licensed under the MIT License.
-
